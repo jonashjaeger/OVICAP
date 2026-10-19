@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#183733">
+  <meta name="description" content="OVICAP: transparent sheep/goat NISP estimation and ZooMS sampling probabilities for archaeology.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="OVICAP">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <title>OVICAP · Zooarchaeological species estimation</title>
+</head>
+<body>
+<div id="update-banner" class="update-banner hidden" role="status"><span>A new version of OVICAP is available.</span><button id="update-now" type="button">Update now ↗</button></div>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M10 15c8-6 20-6 28 0M10 33c8 6 20 6 28 0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M17 18v12m14-12v12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg></span><div><div class="brand-word">OVICAP<span class="brand-dot">.</span></div><div class="brand-small">BIOMOLECULAR ZOOARCHAEOLOGY</div></div></div>
+    <span class="header-version">RESEARCH WORKBENCH <strong>v1.0</strong></span>
+  </div>
+</header>
+<section class="top-section wrap">
+  <p class="eyebrow">MEASURED. MODELLED. EXPLAINED.</p>
+  <div class="title-row"><div><h1>What is hiding in <em>Ovis/Capra?</em></h1><p class="intro">Estimate species-specific specimen counts from ZooMS subsamples, quantify uncertainty, and design better sampling strategies.</p></div><div class="identity-chip"><span class="chip-circle"></span> NISP, not MNI</div></div>
+  <nav class="tabs" aria-label="App sections">
+    <button type="button" class="tab active" data-tab="estimate">01 <span>Assemblage</span></button>
+    <button type="button" class="tab" data-tab="detect">02 <span>Detection</span></button>
+    <button type="button" class="tab" data-tab="library">03 <span>Projects & data</span></button>
+    <button type="button" class="tab" data-tab="methods">04 <span>Methods</span></button>
+  </nav>
+</section>
+<main class="wrap">
+  <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+  <section id="view-estimate" class="view active" aria-labelledby="head-assemblage">
+    <div class="workspace">
+      <aside class="entry-col">
+        <div class="card form-card">
+          <div class="card-head"><div><p class="kicker">RESEARCH INPUTS</p><h2 id="head-assemblage">Assemblage profile</h2></div><span class="step-icon">01</span></div>
+          <div class="inputs">
+            <label class="field"><span class="label-text">Scenario name</span><input id="name" type="text" autocomplete="off" maxlength="100" placeholder="e.g. Site A · Late Iron Age"></label>
+            <div class="field-grid"><label class="field"><span class="label-text">Site</span><input id="site" type="text" maxlength="100" placeholder="Site name"></label><label class="field"><span class="label-text">Period</span><input id="period" type="text" maxlength="100" placeholder="Archaeological period"></label></div>
+            <div class="rule-heading"><span>01 / OSTEOLOGICAL NISP</span><div class="small-rule"></div></div>
+            <div class="field-grid"><label class="field"><span class="label-text">Identified sheep <span class="taxon">Ovis</span></span><input id="morphSheep" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label><label class="field"><span class="label-text">Identified goat <span class="taxon">Capra</span></span><input id="morphGoat" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label></div>
+            <label class="field"><span class="label-text">Ambiguous sheep/goat NISP <span class="field-help" title="Include only ambiguous specimens. ZooMS samples drawn from this pool are already counted here.">ⓘ</span></span><input id="ambiguous" type="number" inputmode="numeric" min="0" max="2000000" step="1" required><span class="hint">Includes the subsample selected for ZooMS. Don't add analysed bones again.</span></label>
+            <div class="rule-heading"><span>02 / ZooMS OF AMBIGUOUS REMAINS</span><div class="small-rule"></div></div>
+            <div class="field-grid"><label class="field"><span class="label-text">Sheep identified</span><input id="zooSheep" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label><label class="field"><span class="label-text">Goat identified</span><input id="zooGoat" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label></div>
+            <div class="field-grid"><label class="field"><span class="label-text">Other taxa identified</span><input id="zooOther" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label><label class="field"><span class="label-text">Inconclusive</span><input id="zooFail" type="number" inputmode="numeric" min="0" max="2000000" step="1" required></label></div>
+            <div class="rule-heading"><span>03 / MODEL ASSUMPTIONS</span><div class="small-rule"></div></div>
+            <label class="field"><span class="label-text">ZooMS selection strategy</span><select id="strategy"><option value="random">Approximately random / representative</option><option value="targeted">Targeted (element, context, size…)</option><option value="unknown">Unknown / not documented</option></select></label>
+            <label class="toggle-line"><input type="checkbox" id="threeTaxa" checked><span><strong>Allow other taxa in unresolved specimens</strong><small>Three-category model: sheep, goat, non-caprine. Turn off to assume all remaining fragments are caprine.</small></span></label>
+            <label class="field"><span class="label-text">Prior per species</span><select id="prior"><option value="0.5">Jeffreys-like Dirichlet (0.5 each)</option><option value="1">Uniform Dirichlet (1 each)</option><option value="2">Conservative smoothing (2 each)</option></select><span class="hint">A model assumption, not an archaeological measurement. Check sensitivity for small samples.</span></label>
+            <label class="field"><span class="label-text">Research notes</span><textarea id="notes" rows="3" placeholder="Sampling bias, morphological criteria, preservation, context…"></textarea></label>
+          </div>
+          <div class="form-actions"><button id="saveScenario" type="button" class="button primary">Save scenario</button><button id="resetDemo" type="button" class="button secondary">Load example</button><button id="newScenario" type="button" class="button secondary">New</button></div>
+        </div>
+      </aside>
+      <section class="results-col" aria-label="Model estimates">
+        <div id="model-errors" class="alert error hidden"></div>
+        <div class="result-card main-result">
+          <div class="result-topline"><span class="kicker">SPECIES ESTIMATES</span><span class="pill" id="result-tag">CONDITIONAL MODEL</span></div>
+          <h2>Projected assemblage <em>composition.</em></h2>
+          <p class="result-sub">Posterior-predictive model of taxonomic identification for unresolved NISP. Values are estimates—not direct observations.</p>
+          <div class="stats-grid" id="main-stats">
+            <div class="stat"><span class="stat-type"><i class="swatch sheep"></i> Sheep</span><strong id="sheep-est">—</strong><small id="sheep-ci">—</small></div>
+            <div class="stat"><span class="stat-type"><i class="swatch goat"></i> Goat</span><strong id="goat-est">—</strong><small id="goat-ci">—</small></div>
+            <div class="stat"><span class="stat-type"><i class="swatch other"></i> Other</span><strong id="other-est">—</strong><small id="other-ci">—</small></div>
+          </div>
+          <div class="chart-subhead"><span>Expected NISP distribution</span><span id="total-nisp">—</span></div>
+          <div class="stack-bar" id="mix-bar" role="img" aria-label="Estimated sheep, goat and other proportions"><div class="bar-sheep"></div><div class="bar-goat"></div><div class="bar-other"></div></div>
+          <div class="chart-key"><span><i class="swatch sheep"></i> Sheep</span><span><i class="swatch goat"></i> Goat</span><span><i class="swatch other"></i> Other</span></div>
+          <div class="result-foot"><span>Goat fraction among caprines</span><strong id="goat-percent">—</strong><small id="goat-percent-ci">—</small></div>
+        </div>
+        <div class="card plot-card"><div class="card-head compact"><div><p class="kicker">MODELLED UNCERTAINTY</p><h3>Likely goat NISP</h3></div><span class="chart-tag">95% interval</span></div><div id="nisp-hist" class="chart-canvas" role="img" aria-label="Posterior predictive histogram of goat NISP"></div><p class="fine-print">Histogram includes both uncertainty about taxonomic proportions and the allocation of unresolved fragments. Simulated with a fixed seed for reproducibility.</p></div>
+        <div class="card evidence-card"><div class="card-head compact"><div><p class="kicker">OBSERVATIONS VS INFERENCE</p><h3>What is actually known?</h3></div></div><div id="audit-table"></div></div>
+        <div id="assumption-notices" class="assumptions"></div>
+      </section>
+    </div>
+  </section>
+  <section id="view-detect" class="view" aria-labelledby="head-detect">
+    <div class="workspace">
+      <aside class="entry-col"><div class="card form-card"><div class="card-head"><div><p class="kicker">SAMPLING PROBABILITY</p><h2 id="head-detect">Find the rare goat.</h2></div><span class="step-icon">02</span></div>
+        <p class="intro-small">Explore how likely a species is to be detected at a chosen underlying NISP proportion. These are hypothetical design assumptions—not inferred historical frequencies.</p>
+        <div class="inputs">
+          <div class="range-label"><label for="rare-p">Hypothetical goat proportion</label><strong id="rare-p-value">2.0%</strong></div><input type="range" id="rare-p" min="0.1" max="20" step="0.1" value="2" aria-label="Hypothetical goat percentage">
+          <div class="range-label"><label for="rare-n">Number of ZooMS attempts</label><strong id="rare-n-value">45</strong></div><input type="range" id="rare-n" min="1" max="400" step="1" value="45" aria-label="Number of ZooMS attempts">
+          <div class="range-label"><label for="success-q">Probability of a diagnostic result</label><strong id="success-q-value">75%</strong></div><input type="range" id="success-q" min="10" max="100" step="1" value="75">
+          <div class="range-label"><label for="target-conf">Desired detection probability</label><strong id="target-conf-value">95%</strong></div><input type="range" id="target-conf" min="50" max="99" step="1" value="95">
+          <label class="field"><span class="label-text">Sampling model</span><select id="detection-mode"><option value="binomial">Independent draws (inc. failed tests)</option><option value="finite">Finite population, diagnostic samples only</option></select></label>
+          <div class="finite-fields hidden" id="finite-fields"><label class="field"><span class="label-text">Population size (NISP)</span><input type="number" inputmode="numeric" id="finite-N" min="1" max="2000000" value="1446"></label><p class="hint">The finite model samples without replacement and assumes every drawn specimen can be identified. It rounds the hypothetical goat percentage to an integer number of goat fragments.</p></div>
+        </div>
+        <button type="button" class="button secondary wide" id="use-current-n">Use current ZooMS totals</button>
+      </div></aside>
+      <section class="results-col">
+        <div class="result-card detect-result"><p class="kicker">THE DETECTION QUESTION</p><h2>How easy is it to <em>miss</em> a rare species?</h2>
+          <div class="detect-stat"><strong id="detection-chance">—</strong><span>Probability of detecting at least one goat</span></div><div class="progress-track"><div id="detection-bar" class="progress-fill"></div></div>
+          <div class="detect-duo"><div><span>Chance of missing all goats</span><strong id="miss-chance">—</strong></div><div><span>Attempts for desired confidence</span><strong id="suggested-attempts">—</strong></div></div>
+          <p class="footnote" id="detect-explanation">—</p>
+        </div>
+        <div class="card plot-card"><div class="card-head compact"><div><p class="kicker">SENSITIVITY</p><h3>Detectability across goat proportions</h3></div></div><div id="detection-curve" class="chart-canvas"></div><p class="fine-print">The curve shows the probability of at least one positive result at each hypothetical goat fraction. It is not a posterior distribution.</p></div>
+        <div class="card evidence-card"><div class="card-head compact"><div><p class="kicker">ZERO GOAT IDENTIFICATIONS</p><h3>What does absence tell us?</h3></div></div><p id="zero-bound" class="body-text">—</p><p class="fine-print">A one-sided exact frequentist upper limit assumes independent, diagnostic, representative observations and perfect species recognition. It is not evidence of true absence.</p></div>
+      </section>
+    </div>
+  </section>
+  <section id="view-library" class="view" aria-labelledby="head-library"><div class="card library-card"><div class="card-head"><div><p class="kicker">LOCAL DATA MANAGEMENT</p><h2 id="head-library">Projects & exports.</h2></div><span class="step-icon">03</span></div><p class="intro-small">Each scenario is saved only in this browser installation. Export frequently; Safari and a Home Screen app may have separate storage.</p><div class="toolbar"><button class="button primary" id="export-scenarios">Export scenarios CSV</button><button class="button secondary" id="export-estimates">Export estimates CSV</button><button class="button secondary" id="export-backup">JSON backup</button><button class="button secondary" id="import-data">Import CSV / JSON</button><input id="upload-data" type="file" accept=".csv,.json,text/csv,application/json" hidden></div><div id="saved-list" class="saved-list"></div><div class="guide"><h3>CSV import template</h3><p>One row per assemblage (site, period, or stratigraphic unit). Include the columns below. Morphological NISP and analysed specimens from the ambiguous pool must not be double-counted.</p><pre>name,site,period,morphSheep,morphGoat,ambiguous,zooSheep,zooGoat,zooOther,zooFail,strategy,threeTaxa,prior,notes</pre><button id="download-template" type="button" class="text-button">Download CSV template ↗</button></div></div></section>
+  <section id="view-methods" class="view" aria-labelledby="head-methods"><div class="method-grid"><div class="card method-main"><p class="kicker">MODEL DOCUMENTATION</p><h2 id="head-methods">An estimate is not an observation.</h2><p>OVICAP estimates <strong>species-specific NISP</strong> among osteologically ambiguous sheep/goat remains. It deliberately does <strong>not</strong> estimate MNI, herd size, domestication intensity, or living population numbers.</p><h3>01 · Accounting</h3><p>Each ambiguous specimen belongs to the original <em>Ovis/Capra</em> NISP. Identified ZooMS specimens are reallocated from that pool, not added a second time. Inconclusive specimens remain in the unresolved pool.</p><div class="formula">N<sub>unresolved</sub> = N<sub>ambiguous</sub> − N<sub>ZooMS sheep</sub> − N<sub>ZooMS goat</sub> − N<sub>ZooMS other</sub></div><h3>02 · Bayesian model</h3><p>Under three-taxon mode, the proportions of sheep, goat and other in the ambiguous pool follow a Dirichlet prior with the same editable concentration for each category. Diagnostic ZooMS identifications update it. Under two-taxon mode, goat vs sheep uses the corresponding Beta model, while known other taxa remain excluded.</p><p>OVICAP generates 6,000 posterior-predictive assignments of all unresolved fragments. It reports predictive means and central 95% intervals. The model assumes ZooMS taxon-specific identification success does not bias the retained outcomes, and that the selection design is exchangeable with unresolved fragments.</p><h3>03 · Detection planning</h3><div class="formula">P(≥1 positive) = 1 − (1 − p × q)<sup>n</sup></div><p>Here p is a hypothetical rare-species proportion, q is the probability of a diagnostic ZooMS result, and n is the number of attempted analyses. The finite-population option uses an exact hypergeometric no-detection probability, without replacement, and assumes all chosen specimens are identifiable.</p><h3>04 · Caveats</h3><p>A purposively selected group of mandibular teeth may not be representative of a whole fragmented assemblage. Taxon, element, context, collagen survival, chronology, and preservation can all affect apparent proportions. Report observed NISP and modelled NISP separately, ideally using stratified sampling when possible.</p><p>For scarce species, zero detected bones is not evidence that the species was entirely absent. Prior choice strongly affects intervals when the diagnostic sample is small or dominated by one species.</p></div><aside class="card method-ref"><p class="kicker">METHOD BASIS</p><h3>Sjögren et al. 2023</h3><p><em>Evaluating caprine remains of the Swedish Funnel Beaker culture through ZooMS.</em> Archaeological and Anthropological Sciences 15:47.</p><a href="https://doi.org/10.1007/s12520-023-01743-2" target="_blank" rel="noopener noreferrer">Read the original article ↗</a><hr><p>The paper tested 45 specimens: 33 sheep, one deer, 11 inconclusive and no goat. Its Figure 6 illustrates the probability of encountering at least one goat under assumed sample compositions.</p><p><strong>OVICAP is an independent exploratory implementation, not analytical software endorsed by the article's authors.</strong></p><hr><p><strong>Data privacy:</strong> All calculations are performed locally on your device. CSV/JSON uploads are never sent to a server.</p><p><strong>Version:</strong> <span id="app-version">1.0.0</span></p></aside></div></section>
+</main>
+<footer class="app-footer wrap"><span>OVICAP · Open research workbench</span><span>SPECIMENS ≠ INDIVIDUALS</span></footer>
+<script src="./engine.js" defer></script><script src="./app.js" defer></script>
+</body>
+</html>

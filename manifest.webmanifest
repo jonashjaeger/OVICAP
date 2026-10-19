@@ -1,0 +1,16 @@
+{
+  "id":"./",
+  "name":"OVICAP — Zooarchaeological Species Estimation",
+  "short_name":"OVICAP",
+  "description":"Offline-first ZooMS-assisted sheep/goat NISP modelling and sampling design.",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f1f3ee",
+  "theme_color":"#183b34",
+  "orientation":"portrait-primary",
+  "icons":[
+    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
